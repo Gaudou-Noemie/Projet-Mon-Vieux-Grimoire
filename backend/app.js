@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const booksRoutes = require('./routes/books');
+const userRoutes = require('./routes/user');
 require('dotenv').config();
 
 const app = express();
@@ -18,24 +20,7 @@ app.use((req, res, next) => {
     next();
 });
 
-
-app.get('/api/books', (req, res, next) => {
-    res.status(202).json();
-});
-
-app.post('/api/books',(req, res, next) => {
-    res.status(200).json({message: " Objet ajouter avec succès"});
-   
-});
-
-app.use((req, res, next) => {
-    res.json({message: 'Ma première requête à bien été reçue !'});
-    next();
-});
-
-app.use((req, res) => {
-    console.log('Réponse envoyé avec succès !');
-})
-
+app.use('/api/books', booksRoutes);
+app.use('/api/auth', userRoutes);
 
 module.exports = app;

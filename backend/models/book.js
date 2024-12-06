@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 
+// Modèle de schema pour MongoDB
 const ratingSchema = mongoose.Schema({
     userId: { type: String, required: true },
     grade: { type: Number, required: true }
 })
 
-
+// Modèle de schema pour MongoDB
 const bookSchema = mongoose.Schema({
     userId: { type: String, required: true },
     title: { type: String, required: true },

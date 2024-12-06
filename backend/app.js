@@ -20,16 +20,12 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
-
+app.get('/', (req, res) => {
+    res.send('Le serveur fonctionne correctement !');
+  });
+  
 app.use('/api/books', booksRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/image', express.static(path.join(__dirname, 'images')));
 
-
-
-const PORT = process.env.PORT || 4000;
-
-app.listen(PORT, () => {
-    console.log(`Server running on port 4000`);
-});
 module.exports = app;

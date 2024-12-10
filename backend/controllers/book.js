@@ -43,10 +43,33 @@ exports.getAllBooks = (req, res, next) => {
 
 // Controle de logique pour récupérer un livre avec son id correspondante
 exports.getOneBook = (req, res, next) => {
-    Book.findOne({_id: req.params.id})
-    .then(book => res.status(200).json(book))
-    .catch(error => res.status(404).json({ error }));
- };
+    Book.findOne({ _id: req.params.id })
+        .then(book => {
+            if (!book) {
+                return res.status(404).json({ message: 'Livre non trouvé' });
+            }
+            console.log('Voici un livre avec son id correspondante');
+            res.status(200).json(book);
+        })
+        .catch(error => {
+            console.log('Une erreur est survenue', error);
+            res.status(500).json({ error });
+        });
+};
+
+// Controle de logique pour afficher les 3 meilleurs livres
+exports.getBestRatings = (req, res, next) => {
+    Book.find().sort({ averageRating: -1 }).limit(3)
+        .then(books => {
+            console.log('Voici les 3 meilleurs livres', books);
+            res.status(200).json(books); 
+        })
+        .catch(error => {
+            console.log('Impossible de les afficher');
+            res.status(500).json({ error });
+        });
+};
+
 
  // Controle de logique pour modifier un livre avec son id correspondante
 exports.modifyBook = (req, res, next) => {
@@ -60,7 +83,12 @@ exports.modifyBook = (req, res, next) => {
     Book.findOne({_id: req.params.id})
     .then((book) => {
         if (book.userId != req.auth.userId) {
-            res.status(401).json({ message: 'Not authorized'});
+            res.status(403).json({ message: 'Unauthorized request'});
+
+            if (req.file) {
+                const filename = book.imageUrl.split('/images/')[1]
+                fs.unlinkSync(`images/${filename}`)
+              }
         } else {
             Book.updateOne({ _id: req.params.id }, { ...bookObject, _id: req.params.id })
     .then(() => res.status(200).json({message: 'Livre modifié avec succès !'}))
@@ -81,7 +109,7 @@ exports.deleteBook = (req, res, next) => {
     Book.findOne({_id: req.params.id})
     .then(book => {
         if (book.userId != req.auth.userId) {
-            res.status(401).json({ message: 'Not authorized'});
+            res.status(403).json({ message: 'Unauthorized request'});
         } else {
             const filename = book.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
@@ -99,3 +127,13 @@ exports.deleteBook = (req, res, next) => {
         res.status(500).json({ error });
     });
 };
+
+// exports.createRatingBook = (req, res, next) => {
+//     Book.findOne ({_id: req.params.id})
+//     .then (book => {
+
+//     })
+//     .catch (error => {
+
+//     })
+// };

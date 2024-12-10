@@ -1,10 +1,5 @@
 const mongoose = require('mongoose');
 
-// Modèle de schema pour MongoDB
-const ratingSchema = mongoose.Schema({
-    userId: { type: String, required: true },
-    grade: { type: Number, required: true }
-})
 
 // Modèle de schema pour MongoDB
 const bookSchema = mongoose.Schema({
@@ -14,8 +9,13 @@ const bookSchema = mongoose.Schema({
     imageUrl: { type: String, required: true },
     year: { type: Number, required: true },
     genre: { type: String, required: true },
-    ratings: { type: [ratingSchema], required: true },
-    averageRating: { type: Number, required: true }
+    ratings:[
+        {
+            userId: { type: String, required: true },
+            grade: { type: Number, required: true }
+        }
+    ],
+    averageRating: { type: Number, required: true },
 });
 
 module.exports = mongoose.model('Book', bookSchema);

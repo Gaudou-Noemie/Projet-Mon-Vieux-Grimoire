@@ -3,6 +3,7 @@ const fs = require('fs');
 
 
 
+
 // Controle de logique pour envoyer un nouveau livre
 exports.createBook = (req, res, next) => {
     const bookObject = JSON.parse(req.body.book);
@@ -13,12 +14,13 @@ exports.createBook = (req, res, next) => {
         return res.status(400).json({ message: 'Aucune image téléchargée.'});
     }
     const imagePath = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-    console.log('Chemin de l\'image :', imagePath);
 
     const  book = new Book({
         ...bookObject,
         userId: req.auth.userId,
-        imageUrl: imagePath
+        imageUrl: imagePath,
+        ratings: [],
+        averageRating: 0
     });
     book.save()
     .then(() => res.status(201).json({message: 'Livre enregistré avec succès !'}))
@@ -32,7 +34,6 @@ exports.createBook = (req, res, next) => {
 exports.getAllBooks = (req, res, next) => {
     Book.find()
     .then(books =>{
-        console.log('Livres récupérés :', books);
         res.status(200).json(books);
     })
     .catch(error => {
@@ -48,11 +49,10 @@ exports.getOneBook = (req, res, next) => {
             if (!book) {
                 return res.status(404).json({ message: 'Livre non trouvé' });
             }
-            console.log('Voici un livre avec son id correspondante');
             res.status(200).json(book);
         })
         .catch(error => {
-            console.log('Une erreur est survenue', error);
+            console.error('Une erreur est survenue', error);
             res.status(500).json({ error });
         });
 };
@@ -61,11 +61,10 @@ exports.getOneBook = (req, res, next) => {
 exports.getBestRatings = (req, res, next) => {
     Book.find().sort({ averageRating: -1 }).limit(3)
         .then(books => {
-            console.log('Voici les 3 meilleurs livres', books);
             res.status(200).json(books); 
         })
         .catch(error => {
-            console.log('Impossible de les afficher');
+            console.error('Impossible de les afficher');
             res.status(500).json({ error });
         });
 };
@@ -90,6 +89,10 @@ exports.modifyBook = (req, res, next) => {
                 fs.unlinkSync(`images/${filename}`)
               }
         } else {
+            if (req.file){
+                const filename = book.imageUrl.split('/images/')[1];
+                fs.unlinkSync(`images/${filename}`);
+            }
             Book.updateOne({ _id: req.params.id }, { ...bookObject, _id: req.params.id })
     .then(() => res.status(200).json({message: 'Livre modifié avec succès !'}))
     .catch(error => {
@@ -99,7 +102,7 @@ exports.modifyBook = (req, res, next) => {
     }
     })
     .catch((error) => {
-        console/error('Erreur lors de la recherche du livre :', error);
+        console.error('Erreur lors de la recherche du livre :', error);
         res.status(400).json({ error });
     });
 };
@@ -128,12 +131,30 @@ exports.deleteBook = (req, res, next) => {
     });
 };
 
-// exports.createRatingBook = (req, res, next) => {
-//     Book.findOne ({_id: req.params.id})
-//     .then (book => {
+// controle de logique pour notez un livre 
+exports.createRatingBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({ message: 'ID du livre manquant' });
+    }
+   const { userId, rating} = req.body;
+    if (!id || !userId || rating === undefined){
+        return res.status(400).json({ message: 'Paramètres manquants ou note non spécifiée'});
+    }
+   if (typeof rating !== 'number' || rating < 0 || rating > 5) {
+        return res.status(400).json({ message: 'La note doit être entre 0 et 5'});
+    }
+const book = await Book.findById(id);
+  if (!book){
+    return res.status(404).json({ message: 'Livre non trouvé'});
+   }
 
-//     })
-//     .catch (error => {
+    await book.addOrUpdateRating(userId, rating);
+ return res.status(200).json({ message: 'Note ajouté avec succès', book})
 
-//     })
-// };
+} catch(error) {
+    console.error('Erreur lors de l\'ajout de la note :', error);
+    res.status(500).json({ error });
+}
+};

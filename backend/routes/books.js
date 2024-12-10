@@ -14,6 +14,6 @@ router.get('/:id', bookCtrl.getOneBook);          // Route pour récupère qu'un
 router.post('/', auth, upload, processImage, bookCtrl.createBook);    // Route pour l'envoie d'un livres
 router.put('/:id', auth, upload, processImage, bookCtrl.modifyBook);    // Route pour modifié un livre avec id correspondante
 router.delete('/:id', auth, bookCtrl.deleteBook);     // Route pour supprimer un livre avec id correspondante 
-// router.post('/:id/rating', auth, bookCtrl, createRatingBook);  // Route pour poster une note sur un livre
+router.post('/:id/rating', auth, bookCtrl.createRatingBook);  // Route pour poster une note sur un livre
 
 module.exports = router;

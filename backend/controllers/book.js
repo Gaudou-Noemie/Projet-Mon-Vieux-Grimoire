@@ -135,10 +135,12 @@ exports.deleteBook = (req, res, next) => {
 exports.createRatingBook = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(req.params)
     if (!id) {
         return res.status(400).json({ message: 'ID du livre manquant' });
     }
    const { userId, rating} = req.body;
+   console.log(req.body)
     if (!id || !userId || rating === undefined){
         return res.status(400).json({ message: 'Paramètres manquants ou note non spécifiée'});
     }
@@ -151,6 +153,7 @@ const book = await Book.findById(id);
    }
 
     await book.addOrUpdateRating(userId, rating);
+    console.log(message= "Note ajouté avec succès !" );
  return res.status(200).json({ message: 'Note ajouté avec succès', book})
 
 } catch(error) {

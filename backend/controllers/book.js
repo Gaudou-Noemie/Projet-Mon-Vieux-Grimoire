@@ -1,11 +1,9 @@
 const Book = require('../models/book');
 const fs = require('fs');
 
-
-
-
 // Controle de logique pour envoyer un nouveau livre
 exports.createBook = (req, res, next) => {
+    try {
     const bookObject = JSON.parse(req.body.book);
     delete bookObject._id;
     delete bookObject._userId;
@@ -15,11 +13,11 @@ exports.createBook = (req, res, next) => {
     }
     const imagePath = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 
+   
     const  book = new Book({
         ...bookObject,
         userId: req.auth.userId,
         imageUrl: imagePath,
-        ratings: [],
         averageRating: 0
     });
     book.save()
@@ -28,6 +26,10 @@ exports.createBook = (req, res, next) => {
         console.error('Erreur lors de l\'enregistrement du livre :', error);
         res.status(400).json({ error });
     });
+} catch (error) {
+    console.error('Erreur lors de la création du livre :', error);
+    res.status(500).json({ error: 'Erreur interne du serveur.' });
+}
 };
 
 // Controle de logique pour récupérer tous les livres
@@ -160,4 +162,5 @@ const book = await Book.findById(id);
     console.error('Erreur lors de l\'ajout de la note :', error);
     res.status(500).json({ error });
 }
+
 };

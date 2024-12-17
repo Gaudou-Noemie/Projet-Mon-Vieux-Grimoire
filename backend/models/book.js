@@ -31,7 +31,7 @@ const existingRating = this.ratings.find(rating => rating.userId.equals(userId))
 if (existingRating) {
     throw new Error("Vous avez déjà noté ce livre.");
 } 
-    this.ratings.push({ userId, grade,  bookId: this._id });
+    this.ratings.push({ userId, grade });
    return this.save(); 
 };
 

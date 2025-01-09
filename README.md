@@ -23,10 +23,9 @@ Le back-end permet de créer un livre, de le mettre à jour, de le supprimer, ai
 
 ## Objectifs pédagogiques
 
-1. **Implémenter un modèle logique de données conformément à la réglementation** : Vous apprendrez à structurer les données dans une base de données MongoDB en respectant une logique cohérente et en appliquant des principes de modélisation efficaces.
-2. **Mettre en œuvre des opérations CRUD de manière sécurisée** : Vous comprendrez comment créer, lire, mettre à jour et supprimer des données de manière sécurisée, en prenant soin de valider et de protéger les données entrées par les utilisateurs.
-3. **Stocker des données de manière sécurisée** : Vous apprendrez à sécuriser les données sensibles, telles que les mots de passe des utilisateurs, et à appliquer les bonnes pratiques pour garantir la sécurité de l'application.
-
+- **Implémenter un modèle logique de données** dans MongoDB en suivant des principes de modélisation efficaces.
+- **Mettre en œuvre des opérations CRUD sécurisées**, en validant et protégeant les données des utilisateurs.
+- **Stocker des données sensibles de manière sécurisée**, en garantissant la protection des mots de passe et en appliquant les meilleures pratiques de sécurité.
 
 ## Installation
  Allez dans le répertoire du projet et installez les dépendances nécessaires avec npm :

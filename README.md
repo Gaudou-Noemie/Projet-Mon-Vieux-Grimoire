@@ -2,7 +2,7 @@
 
 ## Description du projet
 
-**Vieux Grimoire** Vieux Grimoire est un site web permettant aux utilisateurs de noter les livres qu'ils ont lus. Le projet consiste à développer le back-end.
+**Vieux Grimoire** est un site web permettant aux utilisateurs de noter les livres qu'ils ont lus. Le projet consiste à développer le back-end.
 Le back-end permet de créer un livre, de le mettre à jour, de le supprimer, ainsi que d'ajouter des notations et de calculer la note moyenne. 
 
 

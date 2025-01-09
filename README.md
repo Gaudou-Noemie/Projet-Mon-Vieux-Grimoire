@@ -1,4 +1,4 @@
-# 🏗️Projet N°6 - Vieux Grimoire - OpenClassrooms
+# Projet N°6 - Vieux Grimoire - OpenClassrooms
 
 ## Description du projet
 

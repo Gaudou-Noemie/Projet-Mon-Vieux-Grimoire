@@ -17,5 +17,8 @@
         "react"
     ],
     "rules": {
-    }
+    "no-console": "off",
+    "no-alert": "off",
+    "no-confirm": "off"
+  }
 }
